@@ -3,7 +3,7 @@ Customizing the new MacOS Golden Gate(BETA)
 
 Visualizer bar code
 
-('''# ============================
+(''')# ============================
 # SETTINGS
 # ============================
 ARRAYSIZE = 40
@@ -68,4 +68,4 @@ style: """
   }
 """
 
-)
+(''')
