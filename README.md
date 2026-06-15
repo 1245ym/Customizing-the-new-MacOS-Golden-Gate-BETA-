@@ -3,41 +3,42 @@ Customizing the new MacOS Golden Gate(BETA)
 
 Visualizer bar code
 
-(''')# ============================
+# ============================
 # SETTINGS
 # ============================
 ARRAYSIZE = 40
 barColor = "rgba(255,255,255,0.9)"
-offsetY = "45px"             # distance from bottom (dock line)
+offsetY = "45px"       # distance from bottom (dock line)
 glassBlur = "20px"
 
 # ============================
 # INTERNALS
 # ============================
-Values = (0 for num in [0..ARRAYSIZE])
+values = (0 for [0..ARRAYSIZE])
+
 command: "ps -A -o %cpu | awk '{s+=$1} END {print s}'"
 refreshFrequency: 100
 
-render: ->
+render: -> 
   bars = ("<div class='bar graph#{i}'></div>" for i in [0..ARRAYSIZE]).join("")
   """
-  <div class='widget'>
-    <div class='glass'>
+  <div class="widget">
+    <div class="glass">
       #{bars}
     </div>
   </div>
   """
 
-update: (output, domEl) ->
-  output = Math.max(5, Math.min(output, 100))
-  Values = [output].concat Values[0..-2]
+update: (output, domEl) -> 
+  cpuVal = Math.max(5, Math.min(parseFloat(output) || 0, 100))
+  values = [cpuVal].concat values[0..-2]
 
   for i in [0..ARRAYSIZE]
     el = $(domEl).find(".graph#{i}")
-    val = Values[i]
+    val = values[i]
     el.css "height", "#{val / 2}px"
     el.css "background", barColor
-    el.css "opacity", 0.4 + val / 200
+    el.css "opacity", 0.4 + (val / 200)
 
 style: """
   .widget {
@@ -50,6 +51,7 @@ style: """
 
   .glass {
     backdrop-filter: blur(#{glassBlur});
+    -webkit-backdrop-filter: blur(#{glassBlur});
     background: rgba(255,255,255,0.08);
     border-radius: 18px;
     padding: 10px 18px;
@@ -67,5 +69,3 @@ style: """
     transition: height 0.15s ease-out, opacity 0.15s ease-out;
   }
 """
-
-(''')
